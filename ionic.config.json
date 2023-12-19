@@ -1,0 +1,7 @@
+{
+  "name": "pfc-Anotame",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
