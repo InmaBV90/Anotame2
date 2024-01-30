@@ -24,40 +24,50 @@ class Registro extends ResourceController
     
     public function index()
     {
-        $db = \Config\Database::connect();
-        $builder = $db->table('usuarios');
-    
-        $data = [
-            'nombre'    => $this->request->getPost('nombre'),
-            'apellido'  => $this->request->getPost('apellido'),
-            'email'     => $this->request->getPost('email'),
-            'password'  => hash('sha512', $this->request->getPost('password')),
-            'rol'       => $this->request->getPost('rol'),
-        ];
-    
-        $builder->select('email');
-        $builder->where('email', $data['email']); // Verifica si el correo ya existe
-        $query = $builder->get()->getResultArray();
-    
-        if (empty($query)) {
-            // El correo no existe, procede con el registro
-            $this->model->insert($data);
-            $idUsuario = $db->insertID(); // Obtener el ID del usuario recién registrado
-    
-            return $this->respond([
-                'code'       => 200,
-                'data'       => $data,
-                'idUsuario'  => $idUsuario, // Envía el ID del usuario al cliente
-                'authorized' => 'SI',
-                'texto'      => 'Registro realizado con exito',
-            ]);
-        } else {
-            // El correo ya existe, devuelve un error
+        try {
+            $db = \Config\Database::connect();
+            $builder = $db->table('usuarios');
+        
+            $data = [
+                'nombre'    => $this->request->getPost('nombre'),
+                'apellido'  => $this->request->getPost('apellido'),
+                'email'     => $this->request->getPost('email'),
+                'password'  => hash('sha512', $this->request->getPost('password')),
+                'rol'       => $this->request->getPost('rol'),
+                'empresa'   => $this->request->getPost('empresa'),
+            ];
+        
+            $builder->select('email');
+            $builder->where('email', $data['email']); // Verifica si el correo ya existe
+            $query = $builder->get()->getResultArray();
+        
+            if (empty($query)) {
+                // El correo no existe, procede con el registro
+                $this->model->insert($data);
+                $idUsuario = $db->insertID(); // Obtener el ID del usuario recién registrado
+        
+                return $this->respond([
+                    'code'       => 200,
+                    'data'       => $data,
+                    'idUsuario'  => $idUsuario, // Envía el ID del usuario al cliente
+                    'authorized' => 'SI',
+                    'texto'      => 'Registro realizado con éxito',
+                ]);
+            } else {
+                // El correo ya existe, devuelve un error
+                return $this->respond([
+                    'code'       => 500,
+                    'data'       => $query,
+                    'authorized' => 'NO',
+                    'texto'      => 'Usuario ya existe',
+                ]);
+            }
+        } catch (\Exception $e) {
+            log_message('error', $e->getMessage());
             return $this->respond([
                 'code'       => 500,
-                'data'       => $query,
                 'authorized' => 'NO',
-                'texto'      => 'Usuario ya existe',
+                'texto'      => 'Error en el servidor al procesar la solicitud',
             ]);
         }
     }

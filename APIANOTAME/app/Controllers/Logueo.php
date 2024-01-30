@@ -98,6 +98,18 @@ class Logueo extends ResourceController
         return $this->respond($query->getResult());
     }
 
+    public function getEmpleadosConDatos()
+    {
+        $db = \Config\Database::connect();
+
+        $query = $db->query("SELECT usuarios.*, empresas.nombre AS empresa, provincias.provincia AS provincia
+                            FROM usuarios
+                            LEFT JOIN empresas ON usuarios.id_empresa = empresas.id
+                            LEFT JOIN provincias ON usuarios.id_provincia = provincias.id");
+
+        return $this->respond($query->getResult());
+    }
+
     public function borrarEmpleado()
     {
 

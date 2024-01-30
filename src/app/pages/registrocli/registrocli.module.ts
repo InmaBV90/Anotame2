@@ -1,11 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 import { RegistrocliPageRoutingModule } from './registrocli-routing.module';
-
 import { RegistrocliPage } from './registrocli.page';
 
 @NgModule({
@@ -13,8 +11,10 @@ import { RegistrocliPage } from './registrocli.page';
     CommonModule,
     FormsModule,
     IonicModule,
+    ReactiveFormsModule,
     RegistrocliPageRoutingModule
   ],
-  declarations: [RegistrocliPage]
+  declarations: [RegistrocliPage],
+  exports: [RegistrocliPage]  // Agrega esta línea si necesitas exportar el componente
 })
 export class RegistrocliPageModule {}

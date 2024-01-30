@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular/common/http';
-import { of, throwError } from 'rxjs';
+import { HttpClient, HttpHeaders, HttpErrorResponse, HttpRequest, HttpParams } from '@angular/common/http';
+import { Observable, of, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
 @Injectable({
@@ -13,7 +13,11 @@ export class ClientesService {
   LOGIN_CLIENTE = "LogueoCliente";
   REGISTRO_CLIENTE = "RegistroCliente";
 
-  constructor(private http: HttpClient) { }
+  constructor(
+
+    private http: HttpClient
+
+  ) { }
 
   httpOptions = {
     headers: new HttpHeaders({
@@ -105,4 +109,52 @@ export class ClientesService {
       })
     );
   }
+  
+  getClientes() {
+
+    var headers = new Headers();
+    headers.append("Accept", "application/json");
+    headers.append("Content-Type", "application/json");
+
+    return this.http.post(this.BASE_RUTA + this.LOGIN_CLIENTE + '/getClientes', '')
+      .pipe(
+        dat => {
+          console.log('res ' + JSON.stringify(dat));
+
+          return dat;
+        }
+      );
+  }
+
+  borrarCliente(id_cliente: any) {
+    var headers = new Headers();
+    headers.append("Accept", "application/json");
+    headers.append("Content-Type", "application/json");
+
+    const payload = new HttpParams()
+      .set('id_cliente', id_cliente);
+
+    return this.http.post(this.BASE_RUTA + this.LOGIN_CLIENTE + '/borrarCliente', payload)
+      .pipe(
+        dat => {
+          console.log('res ' + JSON.stringify(dat));
+
+          return dat;
+        }
+      );
+  }
+
+  getUserByEmail(email: string): Observable<any> {
+    const payload = new HttpParams().set('email', email);
+
+    return this.http.post(this.BASE_RUTA + this. LOGIN_CLIENTE + '/getUserByEmail', payload)
+      .pipe(
+        dat => {
+          console.log('res ' + JSON.stringify(dat));
+
+          return dat;
+        }
+      );
+  }
+
 }

@@ -1,19 +1,17 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
-import { IonicModule } from '@ionic/angular';
+import { Routes, RouterModule } from '@angular/router';
 
 import { RegistrocliPage } from './registrocli.page';
 
-@NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    ReactiveFormsModule,
+const routes: Routes = [
+  {
+    path: '',
+    component: RegistrocliPage
+  }
+];
 
-  ],
-  declarations: [RegistrocliPage]
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule],
 })
-export class RegistrocliPageModule {}
+export class RegistrocliPageRoutingModule {}
